@@ -1,9 +1,36 @@
+# Dependencies and package/build artifacts
 node_modules/
+.pnpm-store/
+bower_components/
+dist/
+build/
+out/
+coverage/
+.nyc_output/
+*.tsbuildinfo
 *.tgz
+
+# Secrets and local configuration
 .env
 .env.*
 !.env.example
 .npmrc
+*.local.md
+settings.local.json
+
+# Local planning and agent state
+plan.md
+PLAN.md
 .pi/
+.pi-subagents
+*production-ready-vibe-coding-rules*
+
+# Local/editor noise
 .DS_Store
 Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
