@@ -28,7 +28,8 @@
     "THIRD_PARTY_NOTICES.md"
   ],
   "pi": {
-    "extensions": ["./extensions/deepseek-peak/index.ts"]
+    "extensions": ["./extensions/deepseek-peak/index.ts"],
+    "image": "https://raw.githubusercontent.com/juanmackie/pi-deepseek-peak/main/docs/status-bar-preview.png"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

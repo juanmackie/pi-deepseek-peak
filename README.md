@@ -125,6 +125,8 @@ Offline mode keeps the schedule visible and does not add a warning.
 
 ## Status bar output
 
+![DeepSeek peak status bar](docs/status-bar-preview.png)
+
 After the pricing cutover, examples are:
 
 ```text
