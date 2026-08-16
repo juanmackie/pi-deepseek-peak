@@ -1,10 +1,15 @@
 # Operations guide
 
-This guide covers the durable operator actions for `@juanmackie/pi-deepseek-peak`.
+This guide covers the durable operator actions for the published
+`@juanmackie/pi-deepseek-peak` package.
+
+- npm: <https://www.npmjs.com/package/@juanmackie/pi-deepseek-peak>
+- GitHub: <https://github.com/juanmackie/pi-deepseek-peak>
+- pi.dev: <https://pi.dev/packages/%40juanmackie/pi-deepseek-peak>
 
 ## Install, update, and remove
 
-After publication, install the latest package globally for pi:
+Install the latest published package for pi:
 
 ```sh
 pi install npm:@juanmackie/pi-deepseek-peak
@@ -13,7 +18,7 @@ pi install npm:@juanmackie/pi-deepseek-peak
 For a pinned published version:
 
 ```sh
-pi install npm:@juanmackie/pi-deepseek-peak@0.1.0
+pi install npm:@juanmackie/pi-deepseek-peak@0.1.1
 ```
 
 After installation, restart pi or run `/reload` in an existing session.
@@ -135,6 +140,24 @@ Then compare the baked-in schedule with
 If DeepSeek changes the windows or effective date, update the package before
 relying on its output; there is no documented API endpoint that can refresh
 this schedule automatically.
+
+## Publishing and release notes
+
+The package is published under the `juanmackie` npm account with public access.
+The npm README is sourced from the repository's `README.md`; publish a new
+patch version when README or packaged documentation changes need to appear on
+npm:
+
+```sh
+npm version patch
+npm run typecheck
+npm test
+npm run pack:check
+npm publish --access public
+```
+
+Public npm packages with the `pi-package` keyword are indexed by pi.dev
+automatically. There is no separate pi.dev upload step.
 
 ## Maintainer verification
 

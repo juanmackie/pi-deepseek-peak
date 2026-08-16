@@ -1,6 +1,6 @@
 {
   "name": "@juanmackie/pi-deepseek-peak",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Show DeepSeek scheduled peak/off-peak pricing and API account health in the pi status bar.",
   "author": "JUAN MACKIE",
   "type": "module",

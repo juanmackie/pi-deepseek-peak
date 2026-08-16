@@ -7,20 +7,26 @@ using pi's existing DeepSeek credentials.
 
 **Author:** JUAN MACKIE
 
+[![npm version](https://img.shields.io/npm/v/%40juanmackie%2Fpi-deepseek-peak?label=npm)](https://www.npmjs.com/package/@juanmackie/pi-deepseek-peak)
+[![GitHub repository](https://img.shields.io/badge/GitHub-public%20repository-181717?logo=github)](https://github.com/juanmackie/pi-deepseek-peak)
+[![pi.dev package](https://img.shields.io/badge/pi.dev-package-6f42c1)](https://pi.dev/packages/%40juanmackie/pi-deepseek-peak)
+
+Published package links: [npm](https://www.npmjs.com/package/@juanmackie/pi-deepseek-peak) · [GitHub](https://github.com/juanmackie/pi-deepseek-peak) · [pi.dev](https://pi.dev/packages/%40juanmackie/pi-deepseek-peak)
+
 ## Quick start
 
 Requirements: pi installed and Node.js `>=22.19.0`.
 
-1. Install the package from this checkout:
-
-   ```sh
-   pi install ./
-   ```
-
-   After the package is published, the equivalent npm install is:
+1. Install the published package:
 
    ```sh
    pi install npm:@juanmackie/pi-deepseek-peak
+   ```
+
+   To install the current source checkout instead:
+
+   ```sh
+   pi install ./
    ```
 
 2. Start or reload pi:
@@ -57,10 +63,17 @@ updates, removal, security boundaries, and maintainer verification.
 
 ## Install
 
-From npm after publication:
+The current published release is `0.1.1` on npm. Public packages with the
+`pi-package` keyword are indexed in the pi.dev catalog automatically:
 
 ```sh
 pi install npm:@juanmackie/pi-deepseek-peak
+```
+
+To pin that release:
+
+```sh
+pi install npm:@juanmackie/pi-deepseek-peak@0.1.1
 ```
 
 From this local checkout:
@@ -78,6 +91,12 @@ pi -e ./extensions/deepseek-peak/index.ts
 The package is raw TypeScript; pi loads the extension through its normal
 TypeScript extension loader. The named status composes with pi's built-in
 footer rather than replacing the footer.
+
+Package links:
+
+- npm: <https://www.npmjs.com/package/@juanmackie/pi-deepseek-peak>
+- GitHub: <https://github.com/juanmackie/pi-deepseek-peak>
+- pi.dev: <https://pi.dev/packages/%40juanmackie/pi-deepseek-peak>
 
 ## Credentials and API health
 
@@ -165,6 +184,8 @@ mode, lifecycle cleanup, stale requests, and secret non-disclosure.
 
 The package was validated with TypeScript, the Vitest suite, npm pack
 inspection, direct `pi -e` loading, and a local `pi install ./` smoke check.
+The published npm release is `0.1.1`; pi.dev indexes public npm packages
+automatically.
 The authenticated health request itself requires a user-provided DeepSeek
 credential and is intentionally not run as part of automated tests.
 
