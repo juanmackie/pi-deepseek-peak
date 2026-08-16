@@ -1,4 +1,4 @@
-# pi-deepseek-peak
+# @juanmackie/pi-deepseek-peak
 
 A small [pi](https://pi.dev) package that shows DeepSeek's scheduled
 **PEAK/OFF-PEAK** pricing phase and countdown in pi's default status bar.
@@ -20,7 +20,7 @@ Requirements: pi installed and Node.js `>=22.19.0`.
    After the package is published, the equivalent npm install is:
 
    ```sh
-   pi install npm:pi-deepseek-peak
+   pi install npm:@juanmackie/pi-deepseek-peak
    ```
 
 2. Start or reload pi:
@@ -60,7 +60,7 @@ updates, removal, security boundaries, and maintainer verification.
 From npm after publication:
 
 ```sh
-pi install npm:pi-deepseek-peak
+pi install npm:@juanmackie/pi-deepseek-peak
 ```
 
 From this local checkout:

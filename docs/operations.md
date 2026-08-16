@@ -1,19 +1,19 @@
 # Operations guide
 
-This guide covers the durable operator actions for `pi-deepseek-peak`.
+This guide covers the durable operator actions for `@juanmackie/pi-deepseek-peak`.
 
 ## Install, update, and remove
 
 After publication, install the latest package globally for pi:
 
 ```sh
-pi install npm:pi-deepseek-peak
+pi install npm:@juanmackie/pi-deepseek-peak
 ```
 
 For a pinned published version:
 
 ```sh
-pi install npm:pi-deepseek-peak@0.1.0
+pi install npm:@juanmackie/pi-deepseek-peak@0.1.0
 ```
 
 After installation, restart pi or run `/reload` in an existing session.
@@ -21,13 +21,13 @@ After installation, restart pi or run `/reload` in an existing session.
 Update an installed package:
 
 ```sh
-pi update npm:pi-deepseek-peak
+pi update npm:@juanmackie/pi-deepseek-peak
 ```
 
 Remove it:
 
 ```sh
-pi remove npm:pi-deepseek-peak
+pi remove npm:@juanmackie/pi-deepseek-peak
 ```
 
 For local development:
