@@ -1,0 +1,45 @@
+{
+  "name": "pi-deepseek-peak",
+  "version": "0.1.0",
+  "description": "Show DeepSeek scheduled peak/off-peak pricing and API account health in the pi status bar.",
+  "author": "JUAN MACKIE",
+  "type": "module",
+  "license": "MIT",
+  "keywords": ["pi-package", "pi-extension", "deepseek", "status-bar"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juanmackie/pi-deepseek-peak.git"
+  },
+  "homepage": "https://pi.dev/packages/pi-deepseek-peak",
+  "bugs": {
+    "url": "https://github.com/juanmackie/pi-deepseek-peak/issues"
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "files": [
+    "extensions",
+    "README.md",
+    "docs",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "pi": {
+    "extensions": ["./extensions/deepseek-peak/index.ts"]
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "pack:check": "npm pack --dry-run"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "^0.84.2",
+    "@types/node": "^24.12.4",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.9"
+  }
+}
