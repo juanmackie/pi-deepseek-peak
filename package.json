@@ -1,6 +1,6 @@
 {
   "name": "@juanmackie/pi-deepseek-peak",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Show DeepSeek scheduled peak/off-peak pricing and API account health in the pi status bar.",
   "author": "JUAN MACKIE",
   "type": "module",
@@ -8,7 +8,12 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": ["pi-package", "pi-extension", "deepseek", "status-bar"],
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "deepseek",
+    "status-bar"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/juanmackie/pi-deepseek-peak.git"
@@ -28,7 +33,9 @@
     "THIRD_PARTY_NOTICES.md"
   ],
   "pi": {
-    "extensions": ["./extensions/deepseek-peak/index.ts"],
+    "extensions": [
+      "./extensions/deepseek-peak/index.ts"
+    ],
     "image": "https://raw.githubusercontent.com/juanmackie/pi-deepseek-peak/main/docs/status-bar-preview.png"
   },
   "scripts": {
