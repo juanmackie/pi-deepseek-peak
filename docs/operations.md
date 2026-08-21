@@ -18,7 +18,7 @@ pi install npm:@juanmackie/pi-deepseek-peak
 For a pinned published version:
 
 ```sh
-pi install npm:@juanmackie/pi-deepseek-peak@0.1.1
+pi install npm:@juanmackie/pi-deepseek-peak@0.1.3
 ```
 
 After installation, restart pi or run `/reload` in an existing session.

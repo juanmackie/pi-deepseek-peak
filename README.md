@@ -63,7 +63,7 @@ updates, removal, security boundaries, and maintainer verification.
 
 ## Install
 
-The current published release is `0.1.1` on npm. Public packages with the
+The current published release is `0.1.3` on npm. Public packages with the
 `pi-package` keyword are indexed in the pi.dev catalog automatically:
 
 ```sh
@@ -73,7 +73,7 @@ pi install npm:@juanmackie/pi-deepseek-peak
 To pin that release:
 
 ```sh
-pi install npm:@juanmackie/pi-deepseek-peak@0.1.1
+pi install npm:@juanmackie/pi-deepseek-peak@0.1.3
 ```
 
 From this local checkout:
@@ -186,7 +186,7 @@ mode, lifecycle cleanup, stale requests, and secret non-disclosure.
 
 The package was validated with TypeScript, the Vitest suite, npm pack
 inspection, direct `pi -e` loading, and a local `pi install ./` smoke check.
-The published npm release is `0.1.1`; pi.dev indexes public npm packages
+The published npm release is `0.1.3`; pi.dev indexes public npm packages
 automatically.
 The authenticated health request itself requires a user-provided DeepSeek
 credential and is intentionally not run as part of automated tests.
