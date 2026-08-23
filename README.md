@@ -162,10 +162,13 @@ extension does not show repeated notifications.
 The schedule is calculated locally in UTC because DeepSeek does not document
 an endpoint that reports the current pricing phase:
 
-- PEAK: `01:00–04:00 UTC` and `06:00–10:00 UTC`;
+- PEAK: `01:00–04:00 UTC` and `06:00–10:00 UTC` on weekdays;
 - OFF-PEAK: all other times;
+- weekends (Saturday and Sunday, Beijing time) bill at the off-peak rate all
+  day with no peak windows, effective `2026-08-22 16:00 UTC`
+  (00:00 Sunday, August 23, 2026 Beijing time);
 - peak prices are 2× the off-peak prices;
-- the schedule becomes effective at `2026-08-16 16:00 UTC`.
+- the weekday schedule becomes effective at `2026-08-16 16:00 UTC`.
 
 The phase windows and cutover are intentionally baked into the package and
 must be updated if DeepSeek changes its pricing page. The extension trusts the

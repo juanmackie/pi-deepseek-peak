@@ -2,14 +2,25 @@
  * DeepSeek's scheduled V4 pricing windows, in UTC.
  *
  * Source: https://api-docs.deepseek.com/quick_start/pricing/
- * The schedule is intentionally pure and has no dependency on pi or fetch.
+ * Weekends (Saturday/Sunday Beijing time) bill off-peak all day from
+ * WEEKEND_RULE_UTC onward. The schedule is intentionally pure and has no
+ * dependency on pi or fetch.
  */
 
 export const CUTOVER_UTC = Date.UTC(2026, 7, 16, 16, 0, 0)
 
+/**
+ * Weekend rule effective instant: 00:00 Sunday 2026-08-23 Beijing time.
+ * From this moment, Saturdays and Sundays (Beijing time) have no peak windows
+ * and bill at the off-peak rate all day.
+ */
+export const WEEKEND_RULE_UTC = Date.UTC(2026, 7, 22, 16, 0, 0)
+
 const HOUR_MS = 60 * 60 * 1000
 const MINUTE_MS = 60 * 1000
 const DAY_MS = 24 * HOUR_MS
+/** Beijing is UTC+8 with no DST. */
+const BEIJING_OFFSET_MS = 8 * HOUR_MS
 
 const PEAK_WINDOWS_UTC = [
   { startHour: 1, endHour: 4 },
@@ -32,7 +43,14 @@ function startOfUtcDay(timestamp: number): number {
   return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
 }
 
+function isWeekendBeijingAt(timestamp: number): boolean {
+  // Shift into Beijing time, then read the weekday from the UTC calendar.
+  const day = new Date(timestamp + BEIJING_OFFSET_MS).getUTCDay()
+  return day === 0 || day === 6
+}
+
 function isPeakAt(timestamp: number): boolean {
+  if (timestamp >= WEEKEND_RULE_UTC && isWeekendBeijingAt(timestamp)) return false
   const date = new Date(timestamp)
   const hour = date.getUTCHours() + date.getUTCMinutes() / 60
   return PEAK_WINDOWS_UTC.some(
@@ -42,14 +60,28 @@ function isPeakAt(timestamp: number): boolean {
 
 function nextLiveBoundary(timestamp: number): { at: number; label: "PEAK" | "OFF-PEAK" } {
   const dayStart = startOfUtcDay(timestamp)
-  const candidates = PEAK_WINDOWS_UTC.flatMap(({ startHour, endHour }) => [
-    { at: dayStart + startHour * HOUR_MS, label: "PEAK" as const },
-    { at: dayStart + endHour * HOUR_MS, label: "OFF-PEAK" as const },
-  ])
+  // Look far enough ahead to cross a full weekend without peak windows.
+  const candidates = []
+  for (let dayOffset = 0; dayOffset < 4; dayOffset++) {
+    const base = dayStart + dayOffset * DAY_MS
+    for (const { startHour, endHour } of PEAK_WINDOWS_UTC) {
+      candidates.push(
+        { at: base + startHour * HOUR_MS, label: "PEAK" as const },
+        { at: base + endHour * HOUR_MS, label: "OFF-PEAK" as const },
+      )
+    }
+  }
+
+  const next = candidates
     .filter((candidate) => candidate.at > timestamp)
+    // After the weekend rule takes effect, weekends never leave off-peak.
+    .filter(
+      (candidate) =>
+        candidate.at < WEEKEND_RULE_UTC || !isWeekendBeijingAt(candidate.at),
+    )
     .sort((a, b) => a.at - b.at)
 
-  if (candidates.length > 0) return candidates[0]!
+  if (next.length > 0) return next[0]!
   return {
     at: dayStart + DAY_MS + PEAK_WINDOWS_UTC[0].startHour * HOUR_MS,
     label: "PEAK",

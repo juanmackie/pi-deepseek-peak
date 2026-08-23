@@ -91,7 +91,10 @@ does not prove model inference health, latency, or capacity.
 | no `⚠` | The balance endpoint returned a valid, available account response, or health checks are intentionally offline. |
 
 The schedule is calculated from the host clock in UTC. It is not an API claim
-because DeepSeek does not document a current-phase endpoint.
+because DeepSeek does not document a current-phase endpoint. On weekends
+(Saturday and Sunday, Beijing time), the phase stays OFF-PEAK all day and the
+countdown targets Monday's first peak window, effective `2026-08-22 16:00 UTC`
+(00:00 Sunday, August 23, 2026 Beijing time).
 
 ## Troubleshooting
 
@@ -137,9 +140,9 @@ and intentional offline mode does not add a warning.
 The package uses UTC and the local system clock. Check the host clock first.
 Then compare the baked-in schedule with
 [DeepSeek's pricing page](https://api-docs.deepseek.com/quick_start/pricing/).
-If DeepSeek changes the windows or effective date, update the package before
-relying on its output; there is no documented API endpoint that can refresh
-this schedule automatically.
+If DeepSeek changes the windows, weekend rule, or effective date, update the
+package before relying on its output; there is no documented API endpoint that
+can refresh this schedule automatically.
 
 ## Publishing and release notes
 
