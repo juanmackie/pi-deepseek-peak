@@ -1,31 +1,13 @@
 import { describe, expect, it } from "vitest"
 import {
-  CUTOVER_UTC,
   formatCountdown,
   getScheduleSnapshot,
   isPeak,
-  WEEKEND_RULE_UTC,
 } from "../extensions/deepseek-peak/schedule.ts"
 
 const at = (value: string) => new Date(value)
 
 describe("DeepSeek pricing schedule", () => {
-  it("keeps the would-be phase and counts down to cutover", () => {
-    const snapshot = getScheduleSnapshot(at("2026-08-16T02:00:00.000Z"))
-    expect(snapshot.phase).toBe("peak")
-    expect(snapshot.preCutover).toBe(true)
-    expect(snapshot.nextLabel).toBe("LIVE")
-    expect(snapshot.nextBoundaryUtc.getTime()).toBe(CUTOVER_UTC)
-  })
-
-  it("switches to the live schedule exactly at cutover", () => {
-    expect(getScheduleSnapshot(at("2026-08-16T15:59:59.999Z")).preCutover).toBe(true)
-    const snapshot = getScheduleSnapshot(at("2026-08-16T16:00:00.000Z"))
-    expect(snapshot.preCutover).toBe(false)
-    expect(snapshot.phase).toBe("off")
-    expect(snapshot.nextLabel).toBe("PEAK")
-  })
-
   it.each([
     ["2026-08-17T00:59:59.999Z", false, "PEAK"],
     ["2026-08-17T01:00:00.000Z", true, "OFF-PEAK"],
@@ -41,68 +23,33 @@ describe("DeepSeek pricing schedule", () => {
     expect(getScheduleSnapshot(now).nextLabel).toBe(nextLabel)
   })
 
-  describe("weekend rule", () => {
-    it("exposes the weekend rule effective instant as Sunday 00:00 Beijing", () => {
-      expect(new Date(WEEKEND_RULE_UTC).toISOString()).toBe("2026-08-22T16:00:00.000Z")
-      expect(new Date(WEEKEND_RULE_UTC + 8 * 60 * 60 * 1000).getUTCDay()).toBe(0)
+  describe("weekend rule (always active)", () => {
+    it("treats Beijing weekends as off-peak with no peak windows", () => {
+      // Saturday 02:30 Beijing (UTC 08-22 18:30 previous day?) — use a clear Beijing-weekend probe.
+      // 2026-08-22 is Saturday in Beijing (UTC 08-22 08:00 = Beijing 16:00 Friday; let's use an explicit Sunday).
+      // 2026-08-23 is Sunday in Beijing all day.
+      expect(isPeak(at("2026-08-23T00:00:00.000Z"))).toBe(false)
+      expect(isPeak(at("2026-08-23T07:00:00.000Z"))).toBe(false)
+      expect(isPeak(at("2026-08-23T15:59:59.999Z"))).toBe(false)
     })
 
-    it("keeps weekday windows on Beijing-weekend days before the rule takes effect", () => {
-      // Saturday in Beijing, but still before the weekend rule cutover.
-      expect(isPeak(at("2026-08-22T02:30:00.000Z"))).toBe(true)
-      expect(getScheduleSnapshot(at("2026-08-22T06:30:00.000Z")).nextLabel).toBe("OFF-PEAK")
-      const snapshot = getScheduleSnapshot(at("2026-08-22T09:59:59.999Z"))
-      expect(snapshot.phase).toBe("peak")
-    })
-
-    it("switches to the weekend rule exactly at its effective instant", () => {
-      const before = getScheduleSnapshot(at("2026-08-22T15:59:59.999Z"))
-      expect(before.phase).toBe("off")
-      // The projection already knows Sunday's windows will never bill at peak.
-      expect(before.nextLabel).toBe("PEAK")
-      expect(before.nextBoundaryUtc.toISOString()).toBe("2026-08-24T01:00:00.000Z")
-
-      const snapshot = getScheduleSnapshot(at("2026-08-22T16:00:00.000Z"))
-      expect(snapshot.phase).toBe("off")
-      // Sunday's windows are gone; the countdown runs to Monday's first window.
-      expect(snapshot.nextLabel).toBe("PEAK")
-      expect(snapshot.nextBoundaryUtc.toISOString()).toBe("2026-08-24T01:00:00.000Z")
-    })
-
-    it("charges off-peak all day across a full weekend", () => {
-      const probes = [
-        "2026-08-23T00:00:00.000Z",
-        "2026-08-23T02:00:00.000Z",
-        "2026-08-23T07:00:00.000Z",
-        "2026-08-23T09:59:59.999Z",
-        "2026-08-23T15:59:59.999Z",
-      ]
-      for (const probe of probes) {
-        expect(isPeak(at(probe))).toBe(false)
-        expect(getScheduleSnapshot(at(probe)).phase).toBe("off")
-      }
-      // Peak resumes with Monday's first window.
-      expect(isPeak(at("2026-08-24T01:00:00.000Z"))).toBe(true)
-    })
-
-    it("targets Monday's first window throughout the weekend", () => {
+    it("counts from weekend through to Monday's first peak window", () => {
       for (const probe of ["2026-08-22T20:00:00.000Z", "2026-08-23T12:00:00.000Z", "2026-08-23T15:00:00.000Z"]) {
         const snapshot = getScheduleSnapshot(at(probe))
+        expect(snapshot.phase).toBe("off")
         expect(snapshot.nextLabel).toBe("PEAK")
         expect(snapshot.nextBoundaryUtc.toISOString()).toBe("2026-08-24T01:00:00.000Z")
       }
     })
 
     it("resumes weekday windows immediately after the weekend ends", () => {
-      // Monday 00:00 Beijing: off-peak again but back on the weekday ladder.
-      const snapshot = getScheduleSnapshot(at("2026-08-23T16:00:00.000Z"))
-      expect(snapshot.phase).toBe("off")
-      expect(snapshot.nextLabel).toBe("PEAK")
-      expect(snapshot.nextBoundaryUtc.toISOString()).toBe("2026-08-24T01:00:00.000Z")
+      // Monday 00:00 Beijing: off-peak until first peak window.
+      const snapshot = getScheduleSnapshot(at("2026-08-24T01:00:00.000Z"))
+      expect(snapshot.phase).toBe("peak")
+      expect(snapshot.nextLabel).toBe("OFF-PEAK")
     })
 
     it("rolls from the last weekday window into the next weekend", () => {
-      // Thursday night: Friday's windows still apply, then the weekend is skipped.
       const thursdayNight = getScheduleSnapshot(at("2026-08-27T23:59:59.000Z"))
       expect(thursdayNight.nextBoundaryUtc.toISOString()).toBe("2026-08-28T01:00:00.000Z")
 

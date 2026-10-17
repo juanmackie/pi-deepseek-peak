@@ -41,17 +41,12 @@ export default function (pi: ExtensionAPI): void {
   ): string {
     const theme = ctx.ui.theme
     const phase = phaseLabel(snapshot.phase)
-    const phaseColor = snapshot.preCutover
-      ? "warning"
-      : snapshot.phase === "peak" ? "error" : "success"
+    const phaseColor = snapshot.phase === "peak" ? "error" : "success"
     const phaseText = theme.fg(phaseColor, `● ${phase}`)
     const prefix = theme.fg("muted", "DS ") + phaseText
-    const target = snapshot.preCutover
-      ? `${formatCountdown(snapshot.remainingMs)} → LIVE`
-      : `${formatCountdown(snapshot.remainingMs)} → ${snapshot.nextLabel}`
-    const cutover = snapshot.preCutover ? theme.fg("warning", " · PRE-CUTOVER") : ""
+    const target = `${formatCountdown(snapshot.remainingMs)} → ${snapshot.nextLabel}`
     const warning = healthResult?.degraded ? theme.fg("warning", " · ⚠") : ""
-    return `${prefix}${cutover}${theme.fg("muted", ` · ${target}`)}${warning}`
+    return `${prefix}${theme.fg("muted", ` · ${target}`)}${warning}`
   }
 
   function scheduleNextRender(ctx: ExtensionContext, expectedGeneration: number): void {

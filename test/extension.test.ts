@@ -42,12 +42,12 @@ afterEach(() => {
 describe("DeepSeek peak pi extension", () => {
   it("renders the schedule immediately and appends a compact warning after health resolves", async () => {
     vi.useFakeTimers()
-    vi.setSystemTime(new Date("2026-08-16T02:00:00.000Z"))
+    vi.setSystemTime(new Date("2026-08-17T02:00:00.000Z"))
     const harness = makeHarness()
     await harness.handlers.get("session_start")!(undefined, harness.ctx)
     const initial = harness.setStatus.mock.calls.at(-1)?.[1] as string
-    expect(initial).toContain("PRE-CUTOVER")
-    expect(initial).toContain("LIVE")
+    expect(initial).toContain("DS")
+    expect(initial).toContain("PEAK")
 
     await settle()
     const last = harness.setStatus.mock.calls.at(-1)?.[1] as string

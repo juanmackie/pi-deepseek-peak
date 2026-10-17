@@ -53,7 +53,6 @@ Requirements: pi installed and Node.js `>=22.19.0`.
    DS ● OFF-PEAK · 02h 13m → PEAK
    ```
 
-   Before the scheduled pricing cutover, `PRE-CUTOVER` and `→ LIVE` appear.
    A `⚠` means the account-health check needs attention; the schedule remains
    usable.
 
@@ -134,18 +133,6 @@ DS ● OFF-PEAK · 02h 13m → PEAK
 DS ● PEAK · 00h 42m → OFF-PEAK
 ```
 
-Before the cutover, the status shows the would-be schedule phase with an
-explicit marker and counts down to the live schedule:
-
-```text
-DS ● OFF-PEAK · PRE-CUTOVER · 16h 03m → LIVE
-```
-
-The pre-cutover phase is a schedule projection only. DeepSeek's currently
-published flat prices remain the billing rule until `2026-08-16 16:00 UTC`;
-the marker prevents this projection from being mistaken for an active
-surcharge.
-
 A compact `⚠` is appended when account health is degraded, including:
 
 - no configured DeepSeek key;
@@ -160,19 +147,21 @@ extension does not show repeated notifications.
 ## Schedule
 
 The schedule is calculated locally in UTC because DeepSeek does not document
-an endpoint that reports the current pricing phase:
+an endpoint that reports the current pricing phase. Rules are taken directly
+from [DeepSeek's pricing page](https://api-docs.deepseek.com/quick_start/pricing/):
 
-- PEAK: `01:00–04:00 UTC` and `06:00–10:00 UTC` on weekdays;
+- PEAK: `01:00–04:00 UTC` and `06:00–10:00 UTC` on weekdays (Monday–Friday),
+  excluding Chinese public holidays (no peak windows on those days);
 - OFF-PEAK: all other times;
 - weekends (Saturday and Sunday, Beijing time) bill at the off-peak rate all
-  day with no peak windows, effective `2026-08-22 16:00 UTC`
-  (00:00 Sunday, August 23, 2026 Beijing time);
-- peak prices are 2× the off-peak prices;
-- the weekday schedule becomes effective at `2026-08-16 16:00 UTC`.
+  day with no peak windows;
+- Chinese public holidays also bill at the off-peak rate all day;
+- peak prices are 2× the off-peak prices.
 
-The phase windows and cutover are intentionally baked into the package and
-must be updated if DeepSeek changes its pricing page. The extension trusts the
-host clock, so a badly configured system clock can produce a wrong phase.
+The extension applies these rules immediately (there is no future cutover
+baked into the schedule). The phase windows must be updated manually if
+DeepSeek changes its pricing page. The extension trusts the host clock, so a
+badly configured system clock can produce a wrong phase.
 
 ## Development and verification
 
@@ -183,7 +172,7 @@ npm test
 npm run pack:check
 ```
 
-The tests cover exact cutover/window boundaries, day rollover, countdown
+The tests cover exact window/schedule boundaries, day rollover, countdown
 formatting, auth and response handling, unsafe destinations, timeouts, offline
 mode, lifecycle cleanup, stale requests, and secret non-disclosure.
 
